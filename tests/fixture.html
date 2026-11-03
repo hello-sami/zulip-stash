@@ -1,0 +1,41 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Fake Zulip</title>
+<style>body{font:14px system-ui;margin:20px} .message_row{margin:8px 0;padding:6px;border-bottom:1px solid #ddd} .message_header{font-weight:600;background:#eee;padding:4px}</style></head>
+<body>
+<div id="feed">
+  <div class="recipient_row">
+    <div class="message_header message_header_stream"><a class="message-header-stream-name">design</a> &gt; <a class="narrows_by_topic">error page illustrations</a></div>
+    <div class="message_row" data-message-id="101">
+      <span class="sender_name">Ada Lovelace</span> <a class="message-time" href="/#narrow/channel/1-design/topic/error.20page/near/101">10:00</a>
+      <div class="message_content"><p>Have you seen <a href="https://github.com/zulip/zulip/pull/1">this PR</a> about the thing? Also <a href="https://example.com/a">example</a> and <a href="/user_uploads/x.png">an upload</a> and <a href="mailto:a@b.c">mail</a>.</p>
+        <div class="message_embed"><a href="https://skipme.example/">preview card</a></div></div>
+    </div>
+    <div class="message_row" data-message-id="102">
+      <a class="message-time" href="/#narrow/channel/1-design/topic/error.20page/near/102">10:01</a>
+      <div class="message_content"><p>A second message from the same person, with no name shown, and a link to <a href="https://example.com/a">example again</a>.</p></div>
+    </div>
+    <div class="message_row" data-message-id="103">
+      <span class="sender_name">Grace Hopper</span> <a class="message-time" href="/#narrow/channel/1-design/topic/error.20page/near/103">10:05</a>
+      <div class="message_content"><p><a href="https://evil.example/">=HYPERLINK("https://evil.example","click me")</a> is how to make a spreadsheet run something.</p></div>
+    </div>
+  </div>
+  <div class="recipient_row">
+    <div class="message_header message_header_private_message">You and Ada</div>
+    <div class="message_row" data-message-id="201">
+      <span class="sender_name">Ada Lovelace</span> <a class="message-time" href="/#narrow/dm/9-dm/near/201">11:00</a>
+      <div class="message_content"><p>Private note with a link: <a href="https://private.example/page">the page</a>. Remember to read it carefully tonight.</p></div>
+    </div>
+  </div>
+</div>
+<script>
+  // Zulip's own keyboard shortcuts: c opens the compose box, / focuses search.
+  document.addEventListener('keydown', function (e) { if ('cr/jk'.includes(e.key)) window.__zulipShortcut = (window.__zulipShortcut || '') + e.key; });
+  // Messages that arrive after the page loads.
+  setTimeout(function () {
+    var row = document.createElement('div');
+    row.className = 'message_row'; row.dataset.messageId = '104';
+    row.innerHTML = '<span class="sender_name">Late Arrival</span> <a class="message-time" href="/#narrow/channel/1-design/near/104">11:30</a><div class="message_content"><p>Late news: <a href="https://late.example/post">a late link</a>.</p></div>';
+    document.querySelector('.recipient_row').appendChild(row);
+  }, 1500);
+</script>
+</body></html>
