@@ -142,6 +142,9 @@ function zulipStash() {
      another Zulip window saved a moment ago. */
   async function save(item) {
     if (items.has(item.id)) {
+      /* Saved in another window while this button was waiting: redraw so the
+         button doesn't stay on "...". */
+      repaint();
       return 'have';
     }
     /* Optional: a page can define window.zulipStashOnSave to also send each link
@@ -195,7 +198,9 @@ function zulipStash() {
   function paintPlus(host) {
     const button = host.shadowRoot.querySelector('button');
     const saved = items.has('l:' + host.dataset.url);
-    if (button.dataset.state === 'error' && !saved) {
+    /* A button that is mid-save keeps its "..." too, so another link's redraw
+       doesn't turn it back into a "+" that could be clicked twice. */
+    if ((button.dataset.state === 'error' || button.dataset.state === 'busy') && !saved) {
       return;
     }
     button.dataset.state = saved ? 'saved' : 'add';

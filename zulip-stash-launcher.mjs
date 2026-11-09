@@ -33,7 +33,10 @@ const argValue = (name) => {
   return i >= 0 ? process.argv[i + 1] : null;
 };
 const NAME = argValue('--name') || 'Zulip Stash';
-const STATE_DIR = join(homedir(), 'Library', 'Application Support', NAME);
+/* One record for every build (Zulip Stash, Zulip with Links, ...), because they all
+   drive the same Zulip app: whichever one started Zulip is the one that is running,
+   and the others must not quit it. */
+const STATE_DIR = join(homedir(), 'Library', 'Application Support', 'Zulip Stash (running)');
 const STATE_FILE = join(STATE_DIR, 'helper.json');
 const TEST_PROFILE = argValue('--user-data-dir');
 const HOOK = argValue('--hook');
@@ -204,6 +207,9 @@ async function main() {
     if (!TEST_PROFILE && pidAlive(old.pid) && (await answers(old.port))) {
       log('already running; bringing Zulip forward');
       execFileSync('open', ['-a', ZULIP_APP]);
+      if (old.name && old.name !== NAME) {
+        tell(`Zulip is already open through ${old.name}, so it was left as it is. Quit Zulip first to switch to ${NAME}.`);
+      }
       return;
     }
   } catch (error) {
@@ -217,7 +223,7 @@ async function main() {
 
   const port = await freePort();
   if (!TEST_PROFILE) {
-    writeFileSync(STATE_FILE, JSON.stringify({ pid: process.pid, port }));
+    writeFileSync(STATE_FILE, JSON.stringify({ pid: process.pid, port, name: NAME }));
   }
   log('opening Zulip with debug port', port);
   openZulip(port);
